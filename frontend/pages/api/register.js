@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   try {
     // Post to Strapi registration API endpoint
     const response = await axios.post(
-      "http://127.0.0.1:1337/api/auth/local/register",
+      `${process.env.STRAPI_API}/auth/local/register`,
       {
         username,
         email,

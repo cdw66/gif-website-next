@@ -9,6 +9,8 @@ const client = new ApolloClient({
 });
 
 export default function App({ Component, pageProps }) {
+  require("dotenv").config();
+
   return (
     <ApolloProvider client={client}>
       <Layout>
