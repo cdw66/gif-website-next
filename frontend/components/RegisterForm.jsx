@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { signIn } from "next-auth/react";
 
 const RegisterForm = () => {
   const router = useRouter();
@@ -17,10 +18,20 @@ const RegisterForm = () => {
     try {
       // console.log(userData);
 
-      // Post userData from form to custom api endpoint
+      // Create user in the backend
       await axios.post("/api/register", userData);
-      // Redirect to profile page
-      router.replace("/profile");
+
+      // Sign in with new user credentials
+      const result = await signIn("credentials", {
+        redirect: false,
+        username: userData.username,
+        password: userData.password,
+      });
+      if (result.ok) {
+        router.replace("/profile");
+      } else {
+        alert("Register error");
+      }
     } catch (err) {
       console.log(err);
     }

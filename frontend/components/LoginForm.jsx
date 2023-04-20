@@ -2,9 +2,11 @@ import React from "react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import axios from "axios";
+import { signIn } from "next-auth/react";
 
 const LoginForm = () => {
   const router = useRouter();
+
   const [userData, setUserData] = useState({
     username: "",
     password: "",
@@ -14,8 +16,19 @@ const LoginForm = () => {
     e.preventDefault();
 
     try {
-      await axios.post("/api/login", userData);
-      router.replace("/profile");
+      const result = await signIn("credentials", {
+        redirect: false,
+        username: userData.username,
+        password: userData.password,
+      });
+      if (result.ok) {
+        router.replace("/profile");
+        console.log(result);
+      } else {
+        alert("Invalid credentials");
+      }
+      // await axios.post("/api/login", userData);
+      // router.replace("/profile");
     } catch (err) {
       console.log(err);
     }

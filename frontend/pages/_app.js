@@ -1,6 +1,7 @@
 import Layout from "@/components/Layout";
 import "@/styles/globals.css";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { SessionProvider } from "next-auth/react";
 
 // Apollo connection
 const client = new ApolloClient({
@@ -8,14 +9,14 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-export default function App({ Component, pageProps }) {
-  require("dotenv").config();
-
+export default function App({ Component, pageProps, session }) {
   return (
-    <ApolloProvider client={client}>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </ApolloProvider>
+    <SessionProvider session={session}>
+      <ApolloProvider client={client}>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </ApolloProvider>
+    </SessionProvider>
   );
 }
